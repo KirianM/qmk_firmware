@@ -12,7 +12,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 KC_F13, KC_F14, KC_F15, KC_MPLY,
                 KC_F16, KC_F17, KC_F18, TO(_NUMPAD),
                 KC_F19, KC_F20, KC_F21, TO(_CONFIG),
-                KC_NO, KC_NO, RSFT_T(KC_NO)
+                KC_NO, KC_LALT, RSFT_T(KC_NO)
                 ),
     [_NUMPAD] = LAYOUT(
                 KC_KP_7, KC_KP_8, KC_KP_9, TO(_MACRO),
@@ -24,52 +24,47 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 RESET, KC_NO, KC_NO, TO(_MACRO),
                 KC_NO, KC_NO, KC_NO, TO(_NUMPAD),
                 KC_NO, KC_NO, KC_NO, KC_NO,
-                RGB_TOG, KC_NO, KC_NO
+                RGB_TOG, KC_LEFT, KC_RIGHT
                 ),
 };
 
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) { /* First encoder */
-        switch (get_highest_layer(layer_state)) {
-            case _NUMPAD:
-            case _MACRO:
-                if (clockwise) {
-                    tap_code(KC_VOLU); // Volume
-                } else {
-                    tap_code(KC_VOLD);
-                }
-                break;
-            case _CONFIG:
-                break;
+        if (clockwise) {
+            tap_code(KC_VOLU); // Volume
+        } else {
+            tap_code(KC_VOLD);
         }
     } else if (index == 1) { /* Second encoder */
         switch (get_highest_layer(layer_state)) {
             case _NUMPAD:
             case _MACRO:
-                if (clockwise) {
-                    // Next Song
-                    tap_code(KC_MNXT);
-                } else {
-                    // Previous Song
-                    tap_code(KC_MPRV);
-                }
-                break;
             case _CONFIG:
+                if (clockwise) {
+                    // Page Down
+                    tap_code(KC_PGDOWN);
+                } else {
+                    // Page Up
+                    tap_code(KC_PGUP);
+                }
                 break;
         }
     } else if (index == 2) { /* Third encoder */
         switch (get_highest_layer(layer_state)) {
             case _NUMPAD:
             case _MACRO:
-                if (clockwise) {
-                    // Media forward
-                    tap_code(KC_MFFD);
-                } else {
-                    // Media rewind
-                    tap_code(KC_MRWD);
-                }
-                break;
             case _CONFIG:
+                if (clockwise) {
+                    // Arrow Down
+                    for(int i = 0; i <= 6; i++) {
+                        tap_code(KC_DOWN);
+                    }
+                } else {
+                    // Arrow Up
+                    for(int i = 0; i <= 6; i++) {
+                        tap_code(KC_UP);
+                    }
+                }
                 break;
         }
     }
